@@ -1,5 +1,5 @@
 export interface Student {
-  _id: number;
+  _id: string;
   firstName: string;
   lastName: string;
   birthDate: string; // will be stored as yyyy-mm-dd
