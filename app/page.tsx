@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Search, PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Student } from '@/types/student';
 import Link from 'next/link';
+import { deleteStudent } from '@/services/deleteStudent';
 
 export default function Page() {
   const [students, setStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -22,6 +24,24 @@ export default function Page() {
     };
     fetchItems();
   }, []);
+
+  const handleDelete = async (studentId: number) => {
+    try {
+      setDeletingId(studentId);
+
+      await deleteStudent(studentId);
+
+      // Update local state after successful delete
+      setStudents(prevStudents =>
+        prevStudents.filter(student => student._id !== studentId)
+      );
+    } catch (error) {
+      console.error('Error deleting student:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // Empty state component (simplified)
   const EmptyState = () => (
@@ -127,6 +147,7 @@ export default function Page() {
                           <Pencil className='h-5 w-5' />
                         </button>
                         <button
+                          onClick={() => handleDelete(student._id)}
                           className='text-red-600 hover:text-red-800 transition-colors'
                           title='Delete student'
                         >

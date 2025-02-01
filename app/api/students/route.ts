@@ -31,3 +31,31 @@ export async function POST(req: Request) {
     return Response.json({ success: false });
   }
 }
+
+// export async function DELETE(request: Request) {
+//   await dbConnect();
+
+//   try {
+//     const { searchParams } = new URL(request.url);
+//     const id = Number(searchParams.get('id'));
+
+//     if (!id) {
+//       return Response.json({ success: false }, { status: 400 });
+//     }
+
+//     // Use MongoDB to find and delete the student
+//     const deletedStudent = await StudentModel.findOneAndDelete({ _id: id });
+
+//     if (!deletedStudent) {
+//       return Response.json({ success: false }, { status: 404 });
+//     }
+
+//     return Response.json({
+//       success: true,
+//       data: deletedStudent
+//     });
+//   } catch (error) {
+//     console.error('Delete error:', error);
+//     return Response.json({ success: false }, { status: 500 });
+//   }
+// }
