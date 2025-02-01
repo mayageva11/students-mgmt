@@ -5,11 +5,12 @@ import { Search, PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Student } from '@/types/student';
 import Link from 'next/link';
 import { deleteStudent } from '@/services/deleteStudent';
+import router from 'next/router';
 
 export default function Page() {
   const [students, setStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -25,7 +26,7 @@ export default function Page() {
     fetchItems();
   }, []);
 
-  const handleDelete = async (studentId: number) => {
+  const handleDelete = async (studentId: string) => {
     try {
       setDeletingId(studentId);
 
@@ -41,6 +42,10 @@ export default function Page() {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handleEdit = async (studentId: number) => {
+    router.push(`/editStudent?id=${studentId}`);
   };
 
   // Empty state component (simplified)
@@ -140,12 +145,13 @@ export default function Page() {
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                       <div className='flex gap-4'>
-                        <button
+                        <Link
+                          href={`/editStudent?id=${student._id}`}
                           className='text-blue-600 hover:text-blue-800 transition-colors'
                           title='Edit student'
                         >
                           <Pencil className='h-5 w-5' />
-                        </button>
+                        </Link>
                         <button
                           onClick={() => handleDelete(student._id)}
                           className='text-red-600 hover:text-red-800 transition-colors'

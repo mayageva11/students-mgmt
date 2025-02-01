@@ -1,5 +1,5 @@
 // services/studentService.ts
-export async function deleteStudent(id: number) {
+export async function deleteStudent(id: string) {
   try {
     const response = await fetch(`/api/students/${id}`, {
       method: 'DELETE'
