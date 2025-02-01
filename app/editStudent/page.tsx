@@ -67,17 +67,6 @@ export default function EditStudentPage() {
     setIsSubmitting(true);
 
     try {
-      // const response = await fetch(`/api/students/${studentId}`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     grade: parseInt(formData.grade)
-      //   })
-      // });
-
       const newData = updateStudent(studentId, formData);
       if (!newData) {
         throw new Error('Failed to edit student');
