@@ -1,19 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, PlusCircle, Pencil, Trash2 } from 'lucide-react';
-
-interface Student {
-  id: number;
-  firstName: string;
-  lastName: string;
-  birthDate: string;
-  grade: string;
-}
+import { Student } from '@/types/student';
 
 export default function Page() {
   const [students, setStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const res = await fetch('/api/students');
+      const { data, success } = await res.json();
+      console.log(data);
+      if (success) {
+        setStudents(data);
+      } else {
+        // TODO error message
+      }
+    };
+    fetchItems();
+  }, []);
 
   // Empty state component (simplified)
   const EmptyState = () => (
@@ -92,7 +99,7 @@ export default function Page() {
               <tbody className='bg-white divide-y divide-gray-200'>
                 {students.map(student => (
                   <tr
-                    key={student.id}
+                    key={student._id}
                     className='hover:bg-gray-50 transition-colors'
                   >
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
