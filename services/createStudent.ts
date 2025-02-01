@@ -1,4 +1,6 @@
-export async function createStudent() {
+import { StudentFormData } from '@/types/student';
+
+export async function createStudent(formData: StudentFormData) {
   try {
     const response = await fetch('/api/students', {
       method: 'POST',
@@ -6,10 +8,10 @@ export async function createStudent() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        firstName: 'John',
-        lastName: 'Doe',
-        birthDate: '2024-02-27',
-        grade: 100
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        birthDate: formData.birthDate,
+        grade: parseInt(formData.grade)
       })
     });
 
