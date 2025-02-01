@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Student } from '@/types/student';
+import Link from 'next/link';
 
 export default function Page() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -30,13 +31,13 @@ export default function Page() {
         Get started by adding a new student.
       </p>
       <div className='mt-6'>
-        <button
-          type='button'
+        <Link
+          href='/addStudent'
           className='inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
         >
           <PlusCircle className='h-5 w-5' aria-hidden='true' />
           Add student
-        </button>
+        </Link>
       </div>
     </div>
   );
@@ -65,10 +66,13 @@ export default function Page() {
           </div>
 
           {/* Add Student Button */}
-          <button className='flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'>
+          <Link
+            href='/addStudent'
+            className='flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
+          >
             <PlusCircle className='h-5 w-5' />
             Add Student
-          </button>
+          </Link>
         </div>
 
         {/* Table or Empty State */}
