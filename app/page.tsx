@@ -20,7 +20,7 @@ export default function Page() {
       if (success) {
         setStudents(data);
       } else {
-        // TODO error message
+        throw new Error('Failed to fetch students');
       }
     };
     fetchItems();
@@ -29,26 +29,31 @@ export default function Page() {
   const handleDelete = async (studentId: string) => {
     try {
       setDeletingId(studentId);
-
       await deleteStudent(studentId);
-
-      // Update local state after successful delete
       setStudents(prevStudents =>
         prevStudents.filter(student => student._id !== studentId)
       );
     } catch (error) {
       console.error('Error deleting student:', error);
-      // You might want to show an error message to the user here
     } finally {
       setDeletingId(null);
     }
   };
 
-  const handleEdit = async (studentId: number) => {
-    router.push(`/editStudent?id=${studentId}`);
+  // New search handler
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
-  // Empty state component (simplified)
+  // New filtered students logic
+  const filteredStudents = searchQuery
+    ? students.filter(student =>
+        student.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : students;
+
   const EmptyState = () => (
     <div className='text-center py-16'>
       <h3 className='text-sm font-medium text-gray-900'>No students</h3>
@@ -78,14 +83,15 @@ export default function Page() {
 
         {/* Search and Add Section */}
         <div className='flex flex-col sm:flex-row gap-4'>
-          {/* Search Bar */}
+          {/* Updated Search Bar */}
           <div className='relative flex-1'>
             <input
               type='text'
               placeholder='Search by last name...'
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              onKeyDown={handleSearch}
+              className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-gray-900  text-gray-900'
             />
             <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
           </div>
@@ -100,7 +106,7 @@ export default function Page() {
           </Link>
         </div>
 
-        {/* Table or Empty State */}
+        {/* Table with Filtered Results */}
         <div className='bg-white rounded-lg shadow-lg overflow-hidden'>
           {students.length === 0 ? (
             <EmptyState />
@@ -126,7 +132,7 @@ export default function Page() {
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {students.map(student => (
+                {filteredStudents.map(student => (
                   <tr
                     key={student._id}
                     className='hover:bg-gray-50 transition-colors'
