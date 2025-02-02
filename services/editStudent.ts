@@ -16,9 +16,12 @@ export async function getStudentById(id: string): Promise<Student | undefined> {
   }
 }
 
-export async function updateStudent(id: string, studentData: StudentFormData) {
+export async function updateStudent(
+  studentData: StudentFormData,
+  identifier: string
+) {
   try {
-    const response = await fetch(`/api/students/${id}`, {
+    const response = await fetch(`/api/students/${identifier}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
