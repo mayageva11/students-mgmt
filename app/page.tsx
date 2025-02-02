@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { Search, PlusCircle, Pencil, Trash2 } from 'lucide-react';
 import { Student } from '@/types/student';
-import Link from 'next/link';
 import { deleteStudent } from '@/services/deleteStudent';
-import router from 'next/router';
+import { TableCell } from '@/components/TableCell';
+import { AddButton } from '@/components/AddStudentBtn';
+import { DeleteButton } from '@/components/DeleteButton';
+import { EditButton } from '@/components/EditButton';
+import { SearchBar } from '@/components/SearchBar';
 
 export default function Page() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -61,13 +64,7 @@ export default function Page() {
         Get started by adding a new student.
       </p>
       <div className='mt-6'>
-        <Link
-          href='/addStudent'
-          className='inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-        >
-          <PlusCircle className='h-5 w-5' aria-hidden='true' />
-          Add student
-        </Link>
+        <AddButton href='/addStudent' text='Add Student' />
       </div>
     </div>
   );
@@ -84,26 +81,13 @@ export default function Page() {
         {/* Search and Add Section */}
         <div className='flex flex-col sm:flex-row gap-4'>
           {/* Updated Search Bar */}
-          <div className='relative flex-1'>
-            <input
-              type='text'
-              placeholder='Search by last name...'
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearch}
-              className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-gray-900  text-gray-900'
-            />
-            <Search className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
-          </div>
-
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            onKeyDown={handleSearch}
+          />
           {/* Add Student Button */}
-          <Link
-            href='/addStudent'
-            className='flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
-          >
-            <PlusCircle className='h-5 w-5' />
-            Add Student
-          </Link>
+          <AddButton href='/addStudent' text='Add Student' />
         </div>
 
         {/* Table with Filtered Results */}
@@ -114,21 +98,11 @@ export default function Page() {
             <table className='min-w-full divide-y divide-gray-200'>
               <thead className='bg-gray-50'>
                 <tr>
-                  <th className='px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    First Name
-                  </th>
-                  <th className='px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Last Name
-                  </th>
-                  <th className='px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Birth Date
-                  </th>
-                  <th className='px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Grade
-                  </th>
-                  <th className='px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Actions
-                  </th>
+                  <TableCell value='First Name' isHeader />
+                  <TableCell value='Last Name' isHeader />
+                  <TableCell value='Birth Date' isHeader />
+                  <TableCell value='Grade' isHeader />
+                  <TableCell value='Actions' isHeader />
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
@@ -137,34 +111,17 @@ export default function Page() {
                     key={student._id}
                     className='hover:bg-gray-50 transition-colors'
                   >
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      {student.firstName}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      {student.lastName}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      {student.birthDate}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      {student.grade}
-                    </td>
+                    <TableCell value={student.firstName} />
+                    <TableCell value={student.lastName} />
+                    <TableCell value={student.birthDate} />
+                    <TableCell value={student.grade} />
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                       <div className='flex gap-4'>
-                        <Link
-                          href={`/editStudent?id=${student._id}`}
-                          className='text-blue-600 hover:text-blue-800 transition-colors'
-                          title='Edit student'
-                        >
-                          <Pencil className='h-5 w-5' />
-                        </Link>
-                        <button
+                        <EditButton id={student._id} />
+                        <DeleteButton
                           onClick={() => handleDelete(student._id)}
-                          className='text-red-600 hover:text-red-800 transition-colors'
                           title='Delete student'
-                        >
-                          <Trash2 className='h-5 w-5' />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
